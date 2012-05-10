@@ -1,3 +1,31 @@
+getUrlEncodedKey = function(key, query) {
+    if (!query)
+        query = window.location.hash;    
+    var re = new RegExp("[#|&]" + key + "=(.*?)&");
+    var matches = re.exec(query + "&");
+    if (!matches || matches.length < 2)
+        return "";
+    return decodeURIComponent(matches[1].replace("+", " "));
+}
+
+setUrlEncodedKey = function(key, value, query) {
+   
+    query = query || window.location.hash;
+    var q = query + "&";
+    var re = new RegExp("[?|&]" + key + "=.*?&");
+    if (!re.test(q))
+        q += key + "=" + encodeURI(value);
+    else
+        q = q.replace(re, "&" + key + "=" + encodeURIComponent(value) + "&");
+    // q = q.trimStart("&").trimEnd("&");
+    q = q.replace(/^&+/,'').replace(/&+$/,'');
+    var queryString = q[0]=="#" ? q : q = "#" + q;
+	if (query == window.location.hash) {
+		window.location.hash = queryString;
+	}
+	return queryString;
+}
+
 var Dabblet = {
 	version: '1.0.6',
 	
@@ -8,7 +36,7 @@ var Dabblet = {
 	},
 	
 	title: function(code) {
-		return (code && code.match(/^\/\*[\s\*\r\n]+(.+?)($|\*\/)/m) || [,'Untitled'])[1];
+		return (code && code.match(/^\/\*[\s\*\r\n]+(.+?)($|\*\/)/m) || [,''/* when a title is empty, this will be used */])[1];
 	},
 	
 	wipe: function() {
@@ -47,6 +75,8 @@ var Dabblet = {
 				return;
 			}
 			
+			setUrlEncodedKey('css', code);
+			
 			var style = result.contentWindow.style;
 			
 			if(style) {
@@ -55,7 +85,7 @@ var Dabblet = {
 				var title = Dabblet.title(code),
 					raw = code.indexOf('{') > -1;
 			
-				result.contentWindow.document.title = title + ' ✿ Dabblet result';
+				result.contentWindow.document.title = title + ' ✿ CSS Hat preview (powered by dabblet)';
 				
 				if(!raw) {
 					code = 'html{' + code + '}';
@@ -68,6 +98,7 @@ var Dabblet = {
 		},
 		
 		HTML: function(code) {
+			setUrlEncodedKey('html', code);
 			if(result.contentDocument.body) {
 				result.contentDocument.body.innerHTML = code;
 			}
@@ -312,6 +343,18 @@ setTimeout(function(){
 }, 500);
 
 document.addEventListener('DOMContentLoaded', function() {
+	function getUrlParameterByName(name)
+	{
+		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+		var regexS = "[\\?&]" + name + "=([^&#]*)";
+		var regex = new RegExp(regexS);
+		var results = regex.exec(window.location.search);
+		if(results == null)
+			return "";
+		else
+			return decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	
 	if(ACCESS_TOKEN) {
 		gist.getUser();
 	}
@@ -348,11 +391,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	if(!gist.id) {	
-		if(typeof localStorage['dabblet.css'] === 'string') {
+		var paramCss, paramHtml;
+
+		if ((paramCss = getUrlEncodedKey('css')) != '') {
+			css.textContent = paramCss;
+		} else if(typeof localStorage['dabblet.css'] === 'string') {
 			css.textContent = localStorage['dabblet.css'];
 		}
 		
-		if(typeof localStorage['dabblet.html'] === 'string') {
+		if ((paramHtml = getUrlEncodedKey('html')) != '') {
+			html.textContent = paramHtml;
+		} else if(typeof localStorage['dabblet.html'] === 'string') {
 			html.textContent = localStorage['dabblet.html'];
 		}
 		
