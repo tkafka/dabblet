@@ -8,11 +8,13 @@
 <meta name="description" content="An interactive CSS playground and code sharing tool. Dabblet saves to Github gists and offers many conveniences for CSS editing." />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link rel="stylesheet" href="/style.css" />
-<script src="/code/prefixfree.min.js"></script>
+<link rel="stylesheet" href="style.css" />
+<script src="code/prefixfree.min.js"></script>
 
+<!--
 <script>window._gaq = [['_setAccount', 'UA-27750908-1'], ['_trackPageview']];</script>
 <ascript src="http://www.google-analytics.com/ga.js" async></ascript>
+-->
 
 </head>
 <body>
@@ -110,7 +112,7 @@
 	</div>
 </header>
 
-<iframe class="page" id="result" name="result" src="/result.html"></iframe>
+<iframe class="page" id="result" name="result" src="result.html"></iframe>
 <section id="css-container" class="editor page">
 	<pre id="css" lang="css" contenteditable spellcheck="false">/**
  * The first commented line is your dabblet’s title
@@ -160,17 +162,17 @@ min-height: 100%;</pre>
 
 <div id="loader">Loading…</div>
 
-<script src="/code/util.js"></script><!-- to be removed -->
-<script src="/code/utopia.js"></script>
-<script>!!document.createElement("a").classList || $u.script("/code/classList.min.js");</script>
-<script src="/code/selection.js"></script>
-<script src="/code/code-highlight.js"></script>
+<script src="code/util.js"></script><!-- to be removed -->
+<script src="code/utopia.js"></script>
+<script>!!document.createElement("a").classList || $u.script("code/classList.min.js");</script>
+<script src="code/selection.js"></script>
+<script src="code/code-highlight.js"></script>
 
-<script src="/code/editor.js"></script>
-<script src="/code/gist.js"></script>
-<script src="/code/dabblet.js"></script>
+<script src="code/editor.js"></script>
+<script src="code/gist.js"></script>
+<script src="code/dabblet.js"></script>
 
-<script src="/code/previewers.js" async defer></script>
+<script src="code/previewers.js" async defer></script>
 
 </body>
 </html>
